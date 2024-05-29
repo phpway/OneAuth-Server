@@ -18,12 +18,6 @@ class Server
         $this->dataStore = $dataStore;
     }
 
-    // public function emitResponse(ResponseInterface $response): void
-    // {
-    //     $emitter = new ResponseEmitter();
-    //     $emitter->emit($response);
-    // }
-
     protected function getAuthorizeController()
     {
         if ($this->authorizeController === null) {
