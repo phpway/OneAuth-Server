@@ -1,0 +1,25 @@
+{
+  "name": "phpway/oauth2",
+  "description": "Simple OAuth2 server implementation with limited functionality designed for SPA",
+  "keywords": [
+    "oauth2",
+    "spa"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Petr Havlik",
+      "email": "petr.havlik@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "hidehalo/nanoid-php": "^1.1",
+    "httpsoft/http-server-request": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "OAuth2\\": "src"
+    }
+  }
+}
