@@ -1,7 +1,9 @@
 {
-  "name": "phpway/oauth2",
+  "name": "phpway/one-auth-server",
+  "version": "0.9",
   "description": "Simple OAuth2 server implementation with limited functionality designed for SPA",
   "keywords": [
+    "one-auth",
     "oauth2",
     "spa"
   ],
@@ -19,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "OAuth2\\": "src"
+      "OneAuth\\": "src"
     }
   }
 }
