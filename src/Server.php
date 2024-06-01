@@ -48,6 +48,10 @@ class Server
     /**
      * Handle the request to authorize the client.
      *
+     * @param RequestInterface  $request        The request to authorize the client
+     * @param ResponseInterface $response       The response to be emitted by the server
+     * @param bool              $is_authorized  Whether the client is authorized
+     *
      * @return ResponseInterface    Response to be emitted by the server
      */
     public function handleAuthorizeRequest(
@@ -72,6 +76,9 @@ class Server
         return $this->getTokenController()->handleTokenRequest($request, $response, $user_id);
     }
 
+    /**
+     * Validate the request to authorize the client.
+     */
     public function validateAuthorizeRequest(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         return $this->getAuthorizeController()->validateRequest($request, $response);
