@@ -1,9 +1,9 @@
 <?php
-namespace OAuth2;
+namespace OneAuth;
 
-use OAuth2\Controller\AuthorizeController;
-use OAuth2\Controller\TokenController;
-use OAuth2\DataStore\DataStoreInterface;
+use OneAuth\Controller\AuthorizeController;
+use OneAuth\Controller\TokenController;
+use OneAuth\DataStore\DataStoreInterface;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 

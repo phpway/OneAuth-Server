@@ -1,12 +1,12 @@
 <?php
 
-namespace OAuth2\ResponseType;
+namespace OneAuth\ResponseType;
 
 use Hidehalo\Nanoid\Client as Nanoid;
-use OAuth2\DataStore\AccessToken as DataStoreAccessToken;
-use OAuth2\DataStore\DataStoreInterface;
-use OAuth2\Request\TokenParams;
-use OAuth2\Server;
+use OneAuth\DataStore\AccessToken as DataStoreAccessToken;
+use OneAuth\DataStore\DataStoreInterface;
+use OneAuth\Request\TokenParams;
+use OneAuth\Server;
 use Psr\Http\Message\ResponseInterface;
 
 class AccessToken

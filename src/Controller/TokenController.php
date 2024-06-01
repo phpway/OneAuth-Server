@@ -1,10 +1,10 @@
 <?php
-namespace OAuth2\Controller;
+namespace OneAuth\Controller;
 
-use OAuth2\DataStore\DataStoreInterface;
-use OAuth2\Request\TokenParams;
-use OAuth2\ResponseType\AccessToken;
-use OAuth2\Server;
+use OneAuth\DataStore\DataStoreInterface;
+use OneAuth\Request\TokenParams;
+use OneAuth\ResponseType\AccessToken;
+use OneAuth\Server;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 

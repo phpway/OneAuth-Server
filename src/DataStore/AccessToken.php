@@ -1,8 +1,8 @@
 <?php
 
-namespace OAuth2\DataStore;
+namespace OneAuth\DataStore;
 
-use OAuth2\Data\AbstractData;
+use OneAuth\Data\AbstractData;
 
 class AccessToken extends AbstractData
 {

@@ -1,5 +1,5 @@
 <?php
-namespace OAuth2\DataStore;
+namespace OneAuth\DataStore;
 
 class Pdo implements DataStoreInterface
 {

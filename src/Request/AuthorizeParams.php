@@ -1,10 +1,10 @@
 <?php
 
-namespace OAuth2\Request;
+namespace OneAuth\Request;
 
-use OAuth2\DataStore\DataStoreInterface;
-use OAuth2\Data\AbstractData;
-use OAuth2\ResponseType\AuthorizationCode;
+use OneAuth\DataStore\DataStoreInterface;
+use OneAuth\Data\AbstractData;
+use OneAuth\ResponseType\AuthorizationCode;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
 class AuthorizeParams extends AbstractData

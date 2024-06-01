@@ -1,6 +1,6 @@
 <?php
 
-namespace OAuth2\Data;
+namespace OneAuth\Data;
 
 abstract class AbstractData
 {

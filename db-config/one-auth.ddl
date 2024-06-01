@@ -5,7 +5,18 @@ DROP DATABASE IF EXISTS one_auth_backup;
 CREATE DATABASE one_auth_backup;
 USE one_auth_backup;
 
+-- Temporarily create one_auth database with blank tables if it doesn't exist, otherwise the next block would fail
+CREATE DATABASE IF NOT EXISTS one_auth;
+USE one_auth;
+
+CREATE TABLE IF NOT EXISTS oauth_access_tokens (id VARCHAR(1));
+CREATE TABLE IF NOT EXISTS oauth_authorization_codes (id VARCHAR(1));
+CREATE TABLE IF NOT EXISTS oauth_clients (id VARCHAR(1));
+CREATE TABLE IF NOT EXISTS oauth_scopes (id VARCHAR(1));
+CREATE TABLE IF NOT EXISTS oauth_users (id VARCHAR(1));
+
 -- Create copies of all production tables
+USE one_auth_backup;
 CREATE TABLE oauth_access_tokens AS SELECT * FROM one_auth.oauth_access_tokens;
 CREATE TABLE oauth_authorization_codes AS SELECT * FROM one_auth.oauth_authorization_codes;
 CREATE TABLE oauth_clients AS SELECT * FROM one_auth.oauth_clients;

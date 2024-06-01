@@ -1,6 +1,7 @@
 <?php
 
-namespace OAuth2\DataStore;
+namespace OneAuth\DataStore;
 
 class Exception extends \Exception
+
 {}
