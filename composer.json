@@ -1,6 +1,6 @@
 {
   "name": "phpway/one-auth-server",
-  "description": "Simple OAuth2 server implementation with limited functionality designed for SPA",
+  "description": "Simple OAuth2 server implementation with limited functionality designed for Single Page Applications",
   "keywords": [
     "one-auth",
     "oauth2",
