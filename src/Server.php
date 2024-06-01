@@ -51,6 +51,7 @@ class Server
      * @param RequestInterface  $request        The request to authorize the client
      * @param ResponseInterface $response       The response to be emitted by the server
      * @param bool              $is_authorized  Whether the client is authorized
+     * @param mixed             $user_id        The user ID to associate with the token
      *
      * @return ResponseInterface    Response to be emitted by the server
      */
@@ -65,6 +66,10 @@ class Server
 
     /**
      * Handle the request to obtain an authorization token.
+     *
+     * @param RequestInterface  $request    The request to obtain an authorization token
+     * @param ResponseInterface $response   The response to be emitted by the server
+     * @param mixed             $user_id    The user ID to associate with the token
      *
      * @return ResponseInterface    Response to be emitted by the server
      */
