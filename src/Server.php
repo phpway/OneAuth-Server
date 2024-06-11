@@ -18,6 +18,11 @@ class Server
         $this->dataStore = $dataStore;
     }
 
+    public function getDataStore(): DataStoreInterface
+    {
+        return $this->dataStore;
+    }
+
     protected function getAuthorizeController()
     {
         if ($this->authorizeController === null) {
@@ -69,16 +74,14 @@ class Server
      *
      * @param RequestInterface  $request    The request to obtain an authorization token
      * @param ResponseInterface $response   The response to be emitted by the server
-     * @param mixed             $user_id    The user ID to associate with the token
      *
      * @return ResponseInterface    Response to be emitted by the server
      */
     public function handleTokenRequest(
         RequestInterface $request,
         ResponseInterface $response,
-        $user_id = null
     ): ResponseInterface {
-        return $this->getTokenController()->handleTokenRequest($request, $response, $user_id);
+        return $this->getTokenController()->handleTokenRequest($request, $response);
     }
 
     /**

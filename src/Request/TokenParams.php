@@ -32,6 +32,7 @@ class TokenParams extends AbstractData
     ];
 
     protected $validationErrors = [];
+    protected $authorizatonCode = null;
 
     /**
      * Create a new TokenParams instance. It will automatically parse and validate the given request.
@@ -54,6 +55,14 @@ class TokenParams extends AbstractData
     public function getValidationErrors(): array
     {
         return $this->validationErrors;
+    }
+
+    /**
+     * Get the user ID associated with the authorization code.
+     */
+    public function getAuthorizationCode(): ?array
+    {
+        return $this->authorizatonCode;
     }
 
     /**
@@ -112,6 +121,9 @@ class TokenParams extends AbstractData
         if ($redirectUrl !== $this->get('redirect_url')) {
             $this->validationErrors[] = static::validationMessages['mismatch_redirect_url'];
         }
+
+        // remember authorization token
+        $this->authorizatonCode = $token;
 
         // verify code challenge
         $codeChallenge = $token['code_challenge'] ?? null;

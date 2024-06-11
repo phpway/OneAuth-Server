@@ -25,9 +25,9 @@ class AccessToken
         ];
     }
 
-    public function handle(TokenParams $params, ResponseInterface $response, $user_id = null): ResponseInterface
+    public function handle(TokenParams $params, ResponseInterface $response, array $authorizationCode = null): ResponseInterface
     {
-        $accessToken = $this->createToken($params, $user_id);
+        $accessToken = $this->createToken($params, $authorizationCode);
         $this->dataStore->saveAccessToken($accessToken);
 
         // return access token and other data as JSON
@@ -41,15 +41,17 @@ class AccessToken
         return Server::withJson($response, $json);
     }
 
-    protected function createToken(TokenParams $params, $user_id = null): DataStoreAccessToken
+    protected function createToken(TokenParams $params, array $authorizationCode = null): DataStoreAccessToken
     {
         $tokenLifetime = $this->config['token_lifetime'];
+        $userId = $authorizationCode['user_id'] ?? null;
+        $scope = $authorizationCode['scope'] ?? null;
         $data = [
             'access_token' => $this->generateToken(),
             'expires' => date('Y-m-d H:i:s', time() + $tokenLifetime),
             'client_id' => $params->get('client_id'),
-            'user_id' => $user_id,
-            'scope' => $params->get('scope'),
+            'user_id' => $userId,
+            'scope' => $scope,
         ];
 
         return (new DataStoreAccessToken())->createFromArray($data);

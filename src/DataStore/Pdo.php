@@ -10,6 +10,7 @@ class Pdo implements DataStoreInterface
         'scopes' => 'oauth_scopes',
         'authorization_codes' => 'oauth_authorization_codes',
         'access_tokens' => 'oauth_access_tokens',
+        'users' => 'oauth_users',
     ];
 
     public function __construct($dsn, $username = null, $password = null, $options = array())
@@ -32,24 +33,22 @@ class Pdo implements DataStoreInterface
         }
     }
 
-    public function scopeExists(string $scope): bool
+    public function getScopes(): array
     {
-        $stmt = $this->db->prepare(
-            sprintf("SELECT scope FROM %s WHERE scope = :scope", static::tables['scopes'])
-        );
-        $stmt->execute(['scope' => $scope]);
-        $data = $stmt->fetch(\PDO::FETCH_COLUMN);
+        $stmt = $this->db->prepare(sprintf("SELECT scope FROM %s", static::tables['scopes']));
+        $stmt->execute();
+        $data = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
-        return !empty($data);
+        return $data;
     }
 
     public function getRedirectUrls(string $clientId): array
     {
-        $clientData = $this->getClientData($clientId);
-        $urls = preg_split('/\s+/', $clientData['redirect_url']);
-
-        if (empty($urls)) {
-            throw new Exception("Client ID not found");
+        $urls = [];
+        try {
+            $clientData = $this->getClientData($clientId);
+            $urls = preg_split('/\s+/', $clientData['redirect_url']);
+        } catch (\Exception $e) {
         }
 
         return $urls;
@@ -70,6 +69,7 @@ class Pdo implements DataStoreInterface
 
         $result = $stmt->execute($code->getData());
         if (!$result) {
+            var_dump($stmt->errorInfo());
             throw new Exception("Failed to save authorization code");
         }
     }
@@ -113,6 +113,16 @@ class Pdo implements DataStoreInterface
         if (!$result) {
             throw new Exception("Failed to delete authorization code");
         }
+    }
+
+    public function getUserByUsername(string $username): ?array
+    {
+        $result = $this->fetch(
+            sprintf("SELECT * FROM %s WHERE username = :username LIMIT 1", static::tables['users']),
+            ['username' => $username]
+        );
+
+        return $result ?: null;
     }
 
     protected function getClientData(string $clientId)

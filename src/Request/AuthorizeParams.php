@@ -66,6 +66,9 @@ class AuthorizeParams extends AbstractData
 
         // update redirect url with valid value
         $this->set('redirect_url', $this->getValidRedirectUrl());
+
+        // update scope with valid value
+        $this->set('scope', $this->getValidScope());
     }
 
     /**
@@ -96,6 +99,22 @@ class AuthorizeParams extends AbstractData
     }
 
     /**
+     * Calculate the valid scope. It must be an intersection of requested and available scopes.
+     */
+    protected function getValidScope(): ?string
+    {
+        $scope = $this->get('scope');
+        $availableScopes = $this->dataStore->getScopes();
+
+        if (!$scope || !$availableScopes) {
+            return null;
+        }
+
+        $scope = array_intersect(explode(' ', $scope), $availableScopes);
+        return implode(' ', $scope);
+    }
+
+    /**
      * Validate the request parameters. Populates $validationErrors with any errors found.
      */
     protected function validate(): void
@@ -103,7 +122,7 @@ class AuthorizeParams extends AbstractData
         $this->validationErrors = [];
 
         // check required params
-        $requiredParams = $this->fields;
+        $requiredParams = array_diff($this->fields, 'state');
         foreach ($requiredParams as $param) {
             if ($this->get($param) === null) {
                 $this->validationErrors[] = "Missing or invalid required parameter: $param";
@@ -124,7 +143,7 @@ class AuthorizeParams extends AbstractData
             $this->validationErrors[] = static::validationMessages['invalid_client_id'];
         }
 
-        if (!$this->dataStore->scopeExists($scope)) {
+        if (empty($scope)) {
             $this->validationErrors[] = static::validationMessages['invalid_scope'];
         }
 
