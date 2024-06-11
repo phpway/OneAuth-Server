@@ -26,7 +26,7 @@ OneAuth server uses [PSR-7](https://www.php-fig.org/psr/psr-7/) compatible reque
 
 ## SPA Workflow
 
-![workflow](/assets/OneAuth_workflow.png)
+![SPA workflow diagram](/assets/OneAuth_workflow.png)
 
 ## TODOs
  - [ ] Add controller for protecting APIs
