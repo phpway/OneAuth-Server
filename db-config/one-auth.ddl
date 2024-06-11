@@ -5,7 +5,7 @@ DROP DATABASE IF EXISTS one_auth_backup;
 CREATE DATABASE one_auth_backup;
 USE one_auth_backup;
 
--- Temporarily create one_auth database with blank tables if it doesn't exist, otherwise the next block would fail
+-- Temporarily create one_auth database with blank tables if it doesn't exist, otherwise the next block may fail
 CREATE DATABASE IF NOT EXISTS one_auth;
 USE one_auth;
 
@@ -29,11 +29,12 @@ CREATE DATABASE one_auth;
 USE one_auth;
 
 CREATE TABLE oauth_access_tokens (
-  access_token         VARCHAR(40)    NOT NULL COMMENT 'System generated access token. Use appropriate COLLATION for case-sensitive tokens',
-  client_id            VARCHAR(80)             COMMENT 'OAUTH_CLIENTS.CLIENT_ID',
-  user_id              VARCHAR(80)             COMMENT 'OAUTH_USERS.USER_ID',
-  expires              TIMESTAMP      NOT NULL COMMENT 'When the token becomes invalid',
-  scope                VARCHAR(4000)           COMMENT 'Space-delimited list of scopes token can access',
+  access_token         VARCHAR(40)    NOT NULL                           COMMENT 'System generated access token. Use appropriate COLLATION for case-sensitive tokens',
+  client_id            VARCHAR(80)                                       COMMENT 'OAUTH_CLIENTS.CLIENT_ID',
+  user_id              VARCHAR(80)                                       COMMENT 'OAUTH_USERS.USER_ID',
+  created              TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the token was created',
+  expires              TIMESTAMP      NOT NULL                           COMMENT 'When the token becomes invalid',
+  scope                VARCHAR(4000)                                     COMMENT 'Space-delimited list of scopes token can access',
   PRIMARY KEY (access_token)
 );
 
@@ -41,7 +42,7 @@ CREATE TABLE oauth_authorization_codes (
   authorization_code      VARCHAR(40)    NOT NULL COMMENT 'System generated authorization code',
   client_id               VARCHAR(80)             COMMENT 'OAUTH_CLIENTS.CLIENT_ID',
   user_id                 VARCHAR(80)             COMMENT 'OAUTH_USERS.USER_ID',
-  redirect_uri            VARCHAR(2000)  NOT NULL COMMENT 'URI to redirect user after authorization',
+  redirect_url            VARCHAR(2000)  NOT NULL COMMENT 'URL to redirect user after authorization',
   expires                 TIMESTAMP      NOT NULL COMMENT 'When the code becomes invalid',
   scope                   VARCHAR(4000)           COMMENT 'Space-delimited list scopes code can request',
   state                   VARCHAR(128)            COMMENT 'State for the authorization code',
@@ -65,13 +66,15 @@ CREATE TABLE oauth_scopes (
 );
 
 CREATE TABLE oauth_users (
+  user_id             VARCHAR(80),
   username            VARCHAR(80),
   password            VARCHAR(255),
   first_name          VARCHAR(80),
   last_name           VARCHAR(80),
   email               VARCHAR(80),
   scope               VARCHAR(4000),
-  PRIMARY KEY (username)
+  PRIMARY KEY (user_id),
+  UNIQUE KEY username (username) USING BTREE
 );
 
 SHOW TABLES;
