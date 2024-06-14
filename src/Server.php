@@ -106,7 +106,7 @@ class Server
         RequestInterface $request,
         ResponseInterface $response,
     ): ResponseInterface {
-        return $this->getRevokeController()->handleRevokeRequest($request, $response);
+        return $this->getTokenController()->handleRevokeRequest($request, $response);
     }
 
     /**

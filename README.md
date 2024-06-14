@@ -30,6 +30,9 @@ OneAuth server uses [PSR-7](https://www.php-fig.org/psr/psr-7/) compatible reque
 
 ## TODOs
  - [ ] Add controller for protecting APIs
+   - [ ] Recognize token in headers
+   - [ ] Recognize token in GET
+   - [ ] Recognize token in POST
  - [ ] Add endpoint to return user profile
  - [x] Implement revoking tokens
    - [x] Individual token
