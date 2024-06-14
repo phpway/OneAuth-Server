@@ -2,6 +2,7 @@
 namespace OneAuth;
 
 use OneAuth\Controller\AuthorizeController;
+use OneAuth\Controller\RevokeController;
 use OneAuth\Controller\TokenController;
 use OneAuth\DataStore\DataStoreInterface;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
@@ -12,6 +13,7 @@ class Server
     protected $dataStore;
     protected $authorizeController;
     protected $tokenController;
+    protected $revokeController;
 
     public function __construct(DataStoreInterface $dataStore)
     {
@@ -37,6 +39,14 @@ class Server
             $this->tokenController = new TokenController($this->dataStore);
         }
         return $this->tokenController;
+    }
+
+    protected function getRevokeController()
+    {
+        if ($this->revokeController === null) {
+            $this->revokeController = new RevokeController($this->dataStore);
+        }
+        return $this->revokeController;
     }
 
     public static function withRedirect(ResponseInterface $response, string $url): ResponseInterface
@@ -82,6 +92,21 @@ class Server
         ResponseInterface $response,
     ): ResponseInterface {
         return $this->getTokenController()->handleTokenRequest($request, $response);
+    }
+
+    /**
+     * Handle the request to revoke an access token.
+     *
+     * @param RequestInterface  $request    The request to revoke an access token
+     * @param ResponseInterface $response   The response to be emitted by the server
+     *
+     * @return ResponseInterface    Response to be emitted by the server
+     */
+    public function handleRevokeRequest(
+        RequestInterface $request,
+        ResponseInterface $response,
+    ): ResponseInterface {
+        return $this->getRevokeController()->handleRevokeRequest($request, $response);
     }
 
     /**

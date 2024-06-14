@@ -3,11 +3,11 @@
 namespace OneAuth\Request;
 
 use OneAuth\DataStore\DataStoreInterface;
-use OneAuth\Data\AbstractData;
+use OneAuth\Data\AbstractValidatedData;
 use OneAuth\ResponseType\AuthorizationCode;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
-class AuthorizeParams extends AbstractData
+class AuthorizeParams extends AbstractValidatedData
 {
     const validationMessages = [
         'invalid_response_type' => 'Invalid response type',
@@ -29,8 +29,6 @@ class AuthorizeParams extends AbstractData
         'code_challenge_method',
     ];
 
-    protected $validationErrors = [];
-
     /**
      * Create a new AuthorizeParams instance. It will automatically parse and validate the given request.
      *
@@ -42,16 +40,6 @@ class AuthorizeParams extends AbstractData
         $this->dataStore = $dataStore;
         $this->parseRequestParams($request);
         $this->validate();
-    }
-
-    /**
-     * Get any validation errors found during parsing and validation.
-     *
-     * @return array  List of validation errors
-     */
-    public function getValidationErrors(): array
-    {
-        return $this->validationErrors;
     }
 
     /**

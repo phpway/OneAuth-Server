@@ -125,6 +125,40 @@ class Pdo implements DataStoreInterface
         return $result ?: null;
     }
 
+    public function getAccessToken(string $token): ?array
+    {
+        $result = $this->fetch(
+            sprintf("SELECT * FROM %s WHERE access_token = :access_token LIMIT 1", static::tables['access_tokens']),
+            ['access_token' => $token]
+        );
+
+        return $result ?: null;
+    }
+
+    public function deleteAccessToken(string $token): void
+    {
+        $stmt = $this->db->prepare(
+            sprintf("DELETE FROM %s WHERE access_token = :access_token", static::tables['access_tokens'])
+        );
+
+        $result = $stmt->execute(['access_token' => $token]);
+        if (!$result) {
+            throw new Exception("Failed to delete access token");
+        }
+    }
+
+    public function deleteAllAccessTokensForUser(string $clientId, string $userId): void
+    {
+        $stmt = $this->db->prepare(
+            sprintf("DELETE FROM %s WHERE client_id = :client_id AND user_id = :user_id", static::tables['access_tokens'])
+        );
+
+        $result = $stmt->execute(['client_id' => $clientId, 'user_id' => $userId]);
+        if (!$result) {
+            throw new Exception("Failed to delete access tokens for user");
+        }
+    }
+
     protected function getClientData(string $clientId)
     {
         $clientData = $this->fetch(

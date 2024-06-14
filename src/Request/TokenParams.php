@@ -3,11 +3,11 @@
 namespace OneAuth\Request;
 
 use OneAuth\DataStore\DataStoreInterface;
-use OneAuth\Data\AbstractData;
+use OneAuth\Data\AbstractValidatedData;
 use OneAuth\ResponseType\AccessToken;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
-class TokenParams extends AbstractData
+class TokenParams extends AbstractValidatedData
 {
     const validationMessages = [
         'invalid_method' => 'Invalid request method. Must be POST',
@@ -31,7 +31,7 @@ class TokenParams extends AbstractData
         'code_verifier',
     ];
 
-    protected $validationErrors = [];
+    protected $request = null;
     protected $authorizatonCode = null;
 
     /**
@@ -43,18 +43,9 @@ class TokenParams extends AbstractData
     public function __construct(DataStoreInterface $dataStore, RequestInterface $request)
     {
         $this->dataStore = $dataStore;
-        $this->parseRequestData($request);
-        $this->validate($request);
-    }
-
-    /**
-     * Get any validation errors found during parsing and validation.
-     *
-     * @return array  List of validation errors
-     */
-    public function getValidationErrors(): array
-    {
-        return $this->validationErrors;
+        $this->request = $request;
+        $this->parseRequestData();
+        $this->validate();
     }
 
     /**
@@ -70,9 +61,9 @@ class TokenParams extends AbstractData
      *
      * @param RequestInterface $request
      */
-    protected function parseRequestData(RequestInterface $request): void
+    protected function parseRequestData(): void
     {
-        $data = $request->getParsedBody();
+        $data = $this->request->getParsedBody();
         $this->createFromArray($data);
     }
 
@@ -80,12 +71,12 @@ class TokenParams extends AbstractData
      * Validate the request parameters. Populates $validationErrors with any errors found.
      * Any invalid parameters will be cleared from $data.
      */
-    protected function validate(RequestInterface $request): void
+    protected function validate(): void
     {
         $this->validationErrors = [];
 
         // request must be POST
-        if ($request->getMethod() !== 'POST') {
+        if ($this->request->getMethod() !== 'POST') {
             $this->validationErrors[] = static::validationMessages['invalid_method'];
         }
 

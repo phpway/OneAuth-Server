@@ -37,7 +37,7 @@ class TokenController
         $authorizationCode = $params->getAuthorizationCode();
 
         if (!empty($validationErrors)) {
-            return Server::withJson($response, ['error' => implode(', ', $validationErrors)]);
+            return Server::withJson($response, ['error' => implode(', ', $validationErrors)])->withStatus(400);
         }
 
         $handler = null;

@@ -61,6 +61,8 @@ CREATE TABLE oauth_clients (
 
 CREATE TABLE oauth_scopes (
   scope                VARCHAR(80)    NOT NULL COMMENT 'Name of scope, without spaces',
+  display_phrase       VARCHAR(256)            COMMENT 'Text displayed to the user when granting access',
+  require_consent      BOOLEAN                 COMMENT 'Whether to require user confirmation',
   is_default           BOOLEAN                 COMMENT 'True to grant scope',
   PRIMARY KEY (scope)
 );

@@ -1,8 +1,8 @@
 # OneAuth Server
 
-OneAuth server is very simple OAuth2 server implementation with limited functionality specifically designed for authenticating single page applications (SPA) according to the workflow described below.
+OneAuth server is very simple OAuth2 server implementation with limited functionality specifically designed for authenticating single page applications (SPA) according to the workflow described below with exclusive use of reference tokens only.
 
-If you need a fully-featured OAuth2 server implementation, please check projects at the official OAuth page [https://oauth.net/code/php/](https://oauth.net/code/php/).
+If you need a fully-featured OAuth2 server implementation, you can look up the official OAuth page [https://oauth.net/code/php/](https://oauth.net/code/php/).
 
 ## Features
 
@@ -30,4 +30,8 @@ OneAuth server uses [PSR-7](https://www.php-fig.org/psr/psr-7/) compatible reque
 
 ## TODOs
  - [ ] Add controller for protecting APIs
+ - [ ] Add endpoint to return user profile
+ - [x] Implement revoking tokens
+   - [x] Individual token
+   - [x] All for given user
  - [ ] Add functionality for refresh tokens
