@@ -1,7 +1,6 @@
 <?php
 namespace OneAuth\Controller;
 
-use OneAuth\DataStore\DataStoreInterface;
 use OneAuth\Request\RevokeParams;
 use OneAuth\Request\TokenParams;
 use OneAuth\ResponseType\AccessToken;
@@ -9,18 +8,11 @@ use OneAuth\Server;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
-class TokenController
+class TokenController extends AbstractController
 {
     const validationMessages = [
         'invalid_grant_type' => 'Invalid grant type',
     ];
-
-    protected $dataStore;
-
-    public function __construct(DataStoreInterface $dataStore)
-    {
-        $this->dataStore = $dataStore;
-    }
 
     /**
      * Handle request to obtain authorization token.

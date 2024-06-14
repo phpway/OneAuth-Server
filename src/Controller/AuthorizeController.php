@@ -1,26 +1,18 @@
 <?php
 namespace OneAuth\Controller;
 
-use OneAuth\DataStore\DataStoreInterface;
 use OneAuth\Request\AuthorizeParams;
 use OneAuth\ResponseType\AuthorizationCode;
 use OneAuth\Server;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
-class AuthorizeController
+class AuthorizeController extends AbstractController
 {
     const validationMessages = [
         'not_authorized' => 'Client did not authrorize the request',
         'invalid_response_type' => 'Invalid response type',
     ];
-
-    protected $dataStore;
-
-    public function __construct(DataStoreInterface $dataStore)
-    {
-        $this->dataStore = $dataStore;
-    }
 
     /**
      * Validate request for obtaining authorization code.

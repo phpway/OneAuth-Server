@@ -109,6 +109,11 @@ class Server
         return $this->getTokenController()->handleRevokeRequest($request, $response);
     }
 
+    public function verifyResourceRequest(RequestInterface $request, ResponseInterface $response, $scope = null): ResponseInterface
+    {
+        return $this->getResourceController()->verifyResourceRequest($request, $response, $scope);
+    }
+
     /**
      * Validate the request to authorize the client.
      */

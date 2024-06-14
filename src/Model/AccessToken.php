@@ -47,6 +47,11 @@ class AccessToken extends AbstractData
         $this->set('expires', strtotime($this->get('expires')));
     }
 
+    public function checkScope(string $scope): bool
+    {
+        return strpos($this->get('scope'), $scope) !== false;
+    }
+
     public function isValid(): bool
     {
         return (int) $this->get('expires') > time();
