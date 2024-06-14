@@ -89,7 +89,7 @@ class Server
      */
     public function handleTokenRequest(
         RequestInterface $request,
-        ResponseInterface $response,
+        ResponseInterface $response
     ): ResponseInterface {
         return $this->getTokenController()->handleTokenRequest($request, $response);
     }
@@ -104,7 +104,7 @@ class Server
      */
     public function handleRevokeRequest(
         RequestInterface $request,
-        ResponseInterface $response,
+        ResponseInterface $response
     ): ResponseInterface {
         return $this->getTokenController()->handleRevokeRequest($request, $response);
     }
