@@ -29,7 +29,7 @@ OneAuth server uses [PSR-7](https://www.php-fig.org/psr/psr-7/) compatible reque
 ![SPA workflow diagram](/assets/OneAuth_workflow.png)
 
 ## TODOs
- - [ ] Add controller for protecting APIs
+ - [ ] Add resource controller for protecting APIs
    - [x] Recognize token in headers
    - [ ] Recognize token in GET
    - [ ] Recognize token in POST
