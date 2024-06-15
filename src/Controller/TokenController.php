@@ -36,7 +36,7 @@ class TokenController extends AbstractController
         $handler = null;
         switch ($params->get('grant_type')) {
             case AccessToken::GRANT_TYPE:
-                $handler = new AccessToken($this->dataStore);
+                $handler = new AccessToken($this->dataStore, $this->config);
                 break;
         }
 

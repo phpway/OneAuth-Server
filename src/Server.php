@@ -2,7 +2,7 @@
 namespace OneAuth;
 
 use OneAuth\Controller\AuthorizeController;
-use OneAuth\Controller\RevokeController;
+use OneAuth\Controller\ResourceController;
 use OneAuth\Controller\TokenController;
 use OneAuth\DataStore\DataStoreInterface;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
@@ -13,11 +13,21 @@ class Server
     protected $dataStore;
     protected $authorizeController;
     protected $tokenController;
-    protected $revokeController;
+    protected $resourceController;
+    protected $config;
 
-    public function __construct(DataStoreInterface $dataStore)
+    /**
+     * Create a new server instance.
+     *
+     * @param DataStoreInterface    $dataStore  The data store to use
+     * @param array                 $config     Configuration options
+     *                                            - 'authorization_code_lifetime'  Lifetime of the authorization code in seconds
+     *                                            - 'access_token_lifetime'        Lifetime of the access token in seconds
+     */
+    public function __construct(DataStoreInterface $dataStore, array $config = [])
     {
         $this->dataStore = $dataStore;
+        $this->config = $config;
     }
 
     public function getDataStore(): DataStoreInterface
@@ -28,7 +38,7 @@ class Server
     protected function getAuthorizeController()
     {
         if ($this->authorizeController === null) {
-            $this->authorizeController = new AuthorizeController($this->dataStore);
+            $this->authorizeController = new AuthorizeController($this->dataStore, $this->config);
         }
         return $this->authorizeController;
     }
@@ -36,17 +46,17 @@ class Server
     protected function getTokenController()
     {
         if ($this->tokenController === null) {
-            $this->tokenController = new TokenController($this->dataStore);
+            $this->tokenController = new TokenController($this->dataStore, $this->config);
         }
         return $this->tokenController;
     }
 
-    protected function getRevokeController()
+    protected function getResourceController()
     {
-        if ($this->revokeController === null) {
-            $this->revokeController = new RevokeController($this->dataStore);
+        if ($this->resourceController === null) {
+            $this->resourceController = new ResourceController($this->dataStore);
         }
-        return $this->revokeController;
+        return $this->resourceController;
     }
 
     public static function withRedirect(ResponseInterface $response, string $url): ResponseInterface

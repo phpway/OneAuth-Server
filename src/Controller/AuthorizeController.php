@@ -63,7 +63,7 @@ class AuthorizeController extends AbstractController
         $handler = null;
         switch ($params->get('response_type')) {
             case AuthorizationCode::RESPONSE_TYPE:
-                $handler = new AuthorizationCode($this->dataStore);
+                $handler = new AuthorizationCode($this->dataStore, $this->config);
                 break;
         }
 
