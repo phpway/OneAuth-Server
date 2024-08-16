@@ -4,18 +4,36 @@ namespace OneAuth\DataStore;
 class Pdo implements DataStoreInterface
 {
     protected $db;
+    protected $tables;
 
-    const tables = [
-        'clients' => 'oauth_clients',
-        'scopes' => 'oauth_scopes',
-        'authorization_codes' => 'oauth_authorization_codes',
-        'access_tokens' => 'oauth_access_tokens',
-        'users' => 'oauth_users',
-    ];
+    const PREFIX_TABLE = 'oneauth_';
 
-    public function __construct($dsn, $username = null, $password = null, $options = array())
+    const TABLE_CLIENTS = 'clients';
+    const TABLE_SCOPES = 'scopes';
+    const TABLE_AUTHORIZATION_CODES = 'authorization_codes';
+    const TABLE_ACCESS_TOKENS = 'access_tokens';
+    const TABLE_USERS = 'users';
+
+    public function __construct($dsn, $username = null, $password = null, $options = array(), array $tables = [])
     {
         $this->db = new \PDO($dsn, $username, $password, $options);
+
+        // determine table names:
+        // - use value passed in $tables if it exists
+        // - otherwise, use default value (id prefixed by oneauth_)
+        $tableIds = [
+            static::TABLE_CLIENTS,
+            static::TABLE_SCOPES,
+            static::TABLE_AUTHORIZATION_CODES,
+            static::TABLE_ACCESS_TOKENS,
+            static::TABLE_USERS,
+        ];
+        $this->tables = array_combine(
+            $tableIds,
+            array_map(function ($id) use ($tables) {
+                return array_key_exists($id, $tables) ? $tables[$id]: static::PREFIX_TABLE . $id;
+            }, $tableIds)
+        );
     }
 
     public function getDb()
@@ -35,7 +53,7 @@ class Pdo implements DataStoreInterface
 
     public function getScopes(): array
     {
-        $stmt = $this->db->prepare(sprintf("SELECT scope FROM %s", static::tables['scopes']));
+        $stmt = $this->db->prepare(sprintf("SELECT scope FROM %s", $this->getTable(static::TABLE_SCOPES)));
         $stmt->execute();
         $data = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
@@ -63,13 +81,12 @@ class Pdo implements DataStoreInterface
                   VALUES
                     (:authorization_code, :client_id, :redirect_url, :scope, :state, :code_challenge, :code_challenge_method, :expires, :user_id);
                 SQL,
-                static::tables['authorization_codes']
+                $this->getTable(static::TABLE_AUTHORIZATION_CODES)
             )
         );
 
         $result = $stmt->execute($code->getData());
         if (!$result) {
-            var_dump($stmt->errorInfo());
             throw new Exception("Failed to save authorization code");
         }
     }
@@ -83,7 +100,7 @@ class Pdo implements DataStoreInterface
                   VALUES
                     (:access_token, :client_id, :scope, :expires, :user_id);
                 SQL,
-                static::tables['access_tokens']
+                $this->getTable(static::TABLE_ACCESS_TOKENS)
             )
         );
 
@@ -96,7 +113,7 @@ class Pdo implements DataStoreInterface
     public function getAuthorizationCode($authorization_code): array
     {
         $result = $this->fetch(
-            sprintf("SELECT * FROM %s WHERE authorization_code = :authorization_code LIMIT 1", static::tables['authorization_codes']),
+            sprintf("SELECT * FROM %s WHERE authorization_code = :authorization_code LIMIT 1", $this->getTable(static::TABLE_AUTHORIZATION_CODES)),
             ['authorization_code' => $authorization_code]
         );
 
@@ -106,7 +123,7 @@ class Pdo implements DataStoreInterface
     public function deleteAuthorizationCode(string $code): void
     {
         $stmt = $this->db->prepare(
-            sprintf("DELETE FROM %s WHERE authorization_code = :authorization_code", static::tables['authorization_codes'])
+            sprintf("DELETE FROM %s WHERE authorization_code = :authorization_code", $this->getTable(static::TABLE_AUTHORIZATION_CODES))
         );
 
         $result = $stmt->execute(['authorization_code' => $code]);
@@ -118,7 +135,7 @@ class Pdo implements DataStoreInterface
     public function getUserByUsername(string $username): ?array
     {
         $result = $this->fetch(
-            sprintf("SELECT * FROM %s WHERE username = :username LIMIT 1", static::tables['users']),
+            sprintf("SELECT * FROM %s WHERE username = :username LIMIT 1", $this->getTable(static::TABLE_USERS)),
             ['username' => $username]
         );
 
@@ -128,7 +145,7 @@ class Pdo implements DataStoreInterface
     public function getAccessToken(string $token): ?array
     {
         $result = $this->fetch(
-            sprintf("SELECT * FROM %s WHERE access_token = :access_token LIMIT 1", static::tables['access_tokens']),
+            sprintf("SELECT * FROM %s WHERE access_token = :access_token LIMIT 1", $this->getTable(static::TABLE_ACCESS_TOKENS)),
             ['access_token' => $token]
         );
 
@@ -138,7 +155,7 @@ class Pdo implements DataStoreInterface
     public function deleteAccessToken(string $token): void
     {
         $stmt = $this->db->prepare(
-            sprintf("DELETE FROM %s WHERE access_token = :access_token", static::tables['access_tokens'])
+            sprintf("DELETE FROM %s WHERE access_token = :access_token", $this->getTable(static::TABLE_ACCESS_TOKENS))
         );
 
         $result = $stmt->execute(['access_token' => $token]);
@@ -150,7 +167,7 @@ class Pdo implements DataStoreInterface
     public function deleteAllAccessTokensForUser(string $clientId, string $userId): void
     {
         $stmt = $this->db->prepare(
-            sprintf("DELETE FROM %s WHERE client_id = :client_id AND user_id = :user_id", static::tables['access_tokens'])
+            sprintf("DELETE FROM %s WHERE client_id = :client_id AND user_id = :user_id", $this->getTable(static::TABLE_ACCESS_TOKENS))
         );
 
         $result = $stmt->execute(['client_id' => $clientId, 'user_id' => $userId]);
@@ -162,7 +179,7 @@ class Pdo implements DataStoreInterface
     protected function getClientData(string $clientId)
     {
         $clientData = $this->fetch(
-            sprintf("SELECT * FROM %s WHERE client_id = :client_id", static::tables['clients']),
+            sprintf("SELECT * FROM %s WHERE client_id = :client_id", $this->getTable(static::TABLE_CLIENTS)),
             ['client_id' => $clientId]
         );
 
@@ -178,5 +195,10 @@ class Pdo implements DataStoreInterface
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    protected function getTable($name)
+    {
+        return array_key_exists($name, $this->tables) ? $this->tables[$name] : null;
     }
 }
