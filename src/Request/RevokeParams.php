@@ -20,8 +20,9 @@ class RevokeParams extends AbstractValidatedData
     protected $fields = [
         'access_token',
         'client_id',
-        'all_for_user', // optional
+        'all_for_user',
     ];
+    protected $fieldsOptional = ['all_for_user'];
 
     protected $request = null;
     protected $validatedToken = null;
@@ -66,6 +67,14 @@ class RevokeParams extends AbstractValidatedData
         // request must be POST
         if ($this->request->getMethod() !== 'POST') {
             $this->validationErrors[] = static::validationMessages['invalid_method'];
+        }
+
+        // check required params
+        $requiredParams = $this->getRequiredFields();
+        foreach ($requiredParams as $param) {
+            if ($this->get($param) === null) {
+                $this->validationErrors[] = "Missing or invalid required parameter: $param";
+            }
         }
 
         $token = $this->get('access_token');

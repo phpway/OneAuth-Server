@@ -12,8 +12,6 @@ class TokenParams extends AbstractValidatedData
     const validationMessages = [
         'invalid_method' => 'Invalid request method. Must be POST',
         'invalid_grant_type' => 'Invalid grant type',
-        'missing_code' => 'Missing code',
-        'missing_code_verifier' => 'Missing code verifier',
         'invalid_code_challenge' => 'Invalid code challenge',
         'invalid_code' => 'Invalid code',
         'mismatch_client_id' => 'Client ID mismatch',
@@ -30,6 +28,7 @@ class TokenParams extends AbstractValidatedData
         'client_id',
         'code_verifier',
     ];
+    protected $fieldsOptional = [];
 
     protected $request = null;
     protected $authorizatonCode = null;
@@ -80,6 +79,14 @@ class TokenParams extends AbstractValidatedData
             $this->validationErrors[] = static::validationMessages['invalid_method'];
         }
 
+        // check required params
+        $requiredParams = $this->getRequiredFields();
+        foreach ($requiredParams as $param) {
+            if ($this->get($param) === null) {
+                $this->validationErrors[] = "Missing or invalid required parameter: $param";
+            }
+        }
+
         $grantType = $this->get('grant_type');
         $code = $this->get('code');
         $codeVerifier = $this->get('code_verifier');
@@ -87,14 +94,6 @@ class TokenParams extends AbstractValidatedData
         // grant type must be 'authorization_code'
         if ($grantType !== AccessToken::GRANT_TYPE) {
             $this->validationErrors[] = static::validationMessages['invalid_grant_type'];
-        }
-
-        if (!$code) {
-            $this->validationErrors[] = static::validationMessages['missing_code'];
-        }
-
-        if (!$codeVerifier) {
-            $this->validationErrors[] = static::validationMessages['missing_code_verifier'];
         }
 
         // check against previously saved authorization code token

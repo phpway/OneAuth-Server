@@ -28,6 +28,7 @@ class AuthorizeParams extends AbstractValidatedData
         'code_challenge',
         'code_challenge_method',
     ];
+    protected $fieldsOptional = ['state'];
 
     /**
      * Create a new AuthorizeParams instance. It will automatically parse and validate the given request.
@@ -110,7 +111,7 @@ class AuthorizeParams extends AbstractValidatedData
         $this->validationErrors = [];
 
         // check required params
-        $requiredParams = array_diff($this->fields, 'state');
+        $requiredParams = $this->getRequiredFields();
         foreach ($requiredParams as $param) {
             if ($this->get($param) === null) {
                 $this->validationErrors[] = "Missing or invalid required parameter: $param";
@@ -127,7 +128,7 @@ class AuthorizeParams extends AbstractValidatedData
             $this->validationErrors[] = static::validationMessages['invalid_response_type'];
         }
 
-        if (!$this->dataStore->clientExists($client_id)) {
+        if (!$client_id || !$this->dataStore->clientExists($client_id)) {
             $this->validationErrors[] = static::validationMessages['invalid_client_id'];
         }
 

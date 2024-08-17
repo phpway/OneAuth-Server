@@ -7,6 +7,9 @@ abstract class AbstractData
     // data keys to be defined by implementing class
     protected $fields = [];
 
+    // subset of $fields that are optional
+    protected $optionalFields = [];
+
     // stored data with keys matching $fields
     protected $data = [];
 
@@ -34,5 +37,10 @@ abstract class AbstractData
     public function getData(): array
     {
         return $this->data;
+    }
+
+    public function getRequiredFields(): array
+    {
+        return array_diff($this->fields, $this->optionalFields);
     }
 }
