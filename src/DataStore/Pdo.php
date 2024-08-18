@@ -142,6 +142,27 @@ class Pdo implements DataStoreInterface
         return $result ?: null;
     }
 
+    public function createUser(array $user): string
+    {
+        $stmt = $this->db->prepare(
+            sprintf(<<<SQL
+                INSERT INTO %s
+                    (username, password, first_name, last_name, email, authorizer)
+                  VALUES
+                    (:username, :password, :first_name, :last_name, :email, :authorizer);
+                SQL,
+                $this->getTable(static::TABLE_USERS)
+            )
+        );
+
+        $result = $stmt->execute($user);
+        if (!$result) {
+            throw new Exception("Failed to save user");
+        }
+
+        return $this->db->lastInsertId();
+    }
+
     public function getAccessToken(string $token): ?array
     {
         $result = $this->fetch(

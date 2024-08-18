@@ -11,6 +11,7 @@ interface DataStoreInterface
     public function getAuthorizationCode($authorization_code): array;
     public function deleteAuthorizationCode(string $code): void;
     public function getUserByUsername(string $username): ?array;
+    public function createUser(array $user): string;
     public function getAccessToken(string $token): ?array;
     public function deleteAccessToken(string $token): void;
     public function deleteAllAccessTokensForUser(string $clientId, string $userId): void;
