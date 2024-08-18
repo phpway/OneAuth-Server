@@ -28,7 +28,7 @@ class TokenParams extends AbstractValidatedData
         'client_id',
         'code_verifier',
     ];
-    protected $fieldsOptional = [];
+    protected $optionalFields = [];
 
     protected $request = null;
     protected $authorizatonCode = null;

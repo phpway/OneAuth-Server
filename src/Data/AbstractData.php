@@ -13,6 +13,11 @@ abstract class AbstractData
     // stored data with keys matching $fields
     protected $data = [];
 
+    protected function getRequiredFields(): array
+    {
+        return array_diff($this->fields, $this->optionalFields);
+    }
+
     public function get(string $field)
     {
         return $this->data[$field] ?? null;
@@ -37,10 +42,5 @@ abstract class AbstractData
     public function getData(): array
     {
         return $this->data;
-    }
-
-    public function getRequiredFields(): array
-    {
-        return array_diff($this->fields, $this->optionalFields);
     }
 }

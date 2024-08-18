@@ -22,7 +22,7 @@ class RevokeParams extends AbstractValidatedData
         'client_id',
         'all_for_user',
     ];
-    protected $fieldsOptional = ['all_for_user'];
+    protected $optionalFields = ['all_for_user'];
 
     protected $request = null;
     protected $validatedToken = null;

@@ -28,7 +28,7 @@ class AuthorizeParams extends AbstractValidatedData
         'code_challenge',
         'code_challenge_method',
     ];
-    protected $fieldsOptional = ['state'];
+    protected $optionalFields = ['state'];
 
     /**
      * Create a new AuthorizeParams instance. It will automatically parse and validate the given request.
