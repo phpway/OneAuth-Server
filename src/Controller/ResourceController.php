@@ -34,15 +34,16 @@ class ResourceController extends AbstractController
 
         $token = AccessToken::createFromTokenValue($token, $this->dataStore);
 
+        if ($token === null || !$token->isValid()) {
+            return Server::withJson($response, ['error' => 'invalid_token', 'error_description' => 'Token is invalid or expired'])->withStatus(401);
+        }
+
         // if scope is requested, then check if the token has the required scope
         if ($scope !== null && !$token->checkScope($scope)) {
             return Server::withJson($response, ['error' => 'insufficient_scope', 'error_description' => 'Token does not have the required scope'])->withStatus(403);
         }
 
-        if (!$token->isValid()) {
-            return Server::withJson($response, ['error' => 'invalid_token', 'error_description' => 'Token is invalid or expired'])->withStatus(401);
-        }
-
+        $response->getBody()->write(json_encode(['userId' => $token->getUserId()], JSON_UNESCAPED_UNICODE));
         return $response->withStatus(200);
     }
 }

@@ -25,6 +25,12 @@ class AccessToken extends AbstractData
         $this->dataStore = $dataStore;
     }
 
+    protected function convertTimestampFields(): void
+    {
+        $this->set('created', strtotime($this->get('created')));
+        $this->set('expires', strtotime($this->get('expires')));
+    }
+
     public static function createFromTokenValue(string $token, DataStoreInterface $dataStore): ?AccessToken
     {
         $tokenData = $dataStore->getAccessToken($token);
@@ -41,12 +47,6 @@ class AccessToken extends AbstractData
         return $instance;
     }
 
-    protected function convertTimestampFields(): void
-    {
-        $this->set('created', strtotime($this->get('created')));
-        $this->set('expires', strtotime($this->get('expires')));
-    }
-
     public function checkScope(string $scope): bool
     {
         return strpos($this->get('scope'), $scope) !== false;
@@ -61,6 +61,11 @@ class AccessToken extends AbstractData
     {
         $this->dataStore->deleteAccessToken($this->get('access_token'));
         $this->destroy();
+    }
+
+    public function getUserId(): ?string
+    {
+        return $this->get('user_id');
     }
 
     /**
