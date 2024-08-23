@@ -43,6 +43,7 @@ class ResourceController extends AbstractController
             return Server::withJson($response, ['error' => 'insufficient_scope', 'error_description' => 'Token does not have the required scope'])->withStatus(403);
         }
 
+        // return userId in response json
         $response->getBody()->write(json_encode(['userId' => $token->getUserId()], JSON_UNESCAPED_UNICODE));
         return $response->withStatus(200);
     }
