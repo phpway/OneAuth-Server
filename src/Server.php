@@ -22,7 +22,7 @@ class Server
      * @param DataStoreInterface    $dataStore  The data store to use
      * @param array                 $config     Configuration options
      *                                            - 'authorization_code_lifetime'  Lifetime of the authorization code in seconds
-     *                                            - 'access_token_lifetime'        Lifetime of the access token in seconds
+     *                                            - 'token_lifetime'               Lifetime of the access token in seconds
      */
     public function __construct(DataStoreInterface $dataStore, array $config = [])
     {
