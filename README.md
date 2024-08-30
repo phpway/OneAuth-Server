@@ -6,9 +6,10 @@ If you need a fully-featured OAuth2 server implementation, you can look up the o
 
 ## Features
 
-At the moment, OneAuth server provides 2 controllers:
+At the moment, OneAuth server provides 3 controllers:
  - **`AuthorizeController`** - handle requests for obtaining the `Authorization Code` which is one-time use, short-lived random code to be used by SPA for obtaining the `Access Token`.
  - **`TokenController`** - handle requests for obtaining the `Access Token`.
+ - **`ResourceController`** - to verify API requests.
 
 Request data required for each controller together with response details are described in the workflow below.
 
@@ -18,7 +19,7 @@ Thus, there is no `client secret` in the workflow as the SPA has no mechanism to
 
 ## PSR-7 Request / Response
 
-OneAuth server uses [PSR-7](https://www.php-fig.org/psr/psr-7/) compatible request and response objects for handling requests to obtain authorization codes and/or access tokens. Thus, you will need to provide a PSR-7 implementation that best first your application. Few options you can choose from:
+OneAuth server uses [PSR-7](https://www.php-fig.org/psr/psr-7/) compatible request and response objects for handling requests to obtain authorization codes and/or access tokens. Thus, you will need to provide a PSR-7 implementation that best fits your application. Here are few options you can choose from:
  - [Slim-Psr7](https://github.com/slimphp/Slim-Psr7) - Slim Framework PSR-7 implementation
  - [httpsoft/http-message](https://github.com/httpsoft/http-message) & [httpsoft/http-server-request](https://github.com/httpsoft/http-server-request) - Fast, strict and lightweight implementation
 
@@ -33,7 +34,6 @@ OneAuth server uses [PSR-7](https://www.php-fig.org/psr/psr-7/) compatible reque
    - [x] Recognize token in headers
    - [ ] Recognize token in GET
    - [ ] Recognize token in POST
- - [ ] Add endpoint to return user profile
  - [x] Implement revoking tokens
    - [x] Individual token
    - [x] All for given user
