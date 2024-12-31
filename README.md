@@ -13,7 +13,7 @@ At the moment, OneAuth server provides 3 controllers:
 
 Request data required for each controller together with response details are described in the workflow below.
 
-Since OneAuth server designed for authenticating SPAs, all communication between OneAuth server and the client app is transparent to the user (either via url search params, or via sending form data in POST requests), meaning there is no back channel for exchanging data between these two entities.
+Since OneAuth server is designed for authenticating SPAs, all communication between OneAuth server and the client app is transparent to the user (either via url search params, or via sending form data in POST requests), meaning there is no back channel for exchanging data between these two entities.
 
 Thus, there is no `client secret` in the workflow as the SPA has no mechanism to hide it. But it uses PKCE protection that requires the client app sending `code verifier` (random string) hash in the initial request for the authorization code, and then sending code verifier in plain text when exchanging this authorization code for the access token.
 
